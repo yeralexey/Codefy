@@ -48,7 +48,7 @@ All imports are made to main.py, and imported to plugins with `from main impot *
 may not be a good decision, but works fine for me.
 
 
-## IV.  How to run in on your computer or else.
+## IV.  How to set up.
 
 That's what I do, actually.
 
