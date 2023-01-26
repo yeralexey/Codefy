@@ -1,0 +1,7 @@
+/.idea/
+/venv/
+/maindata/main.db
+/maindata/PyrogramTemplateBot.session
+/maindata/PyrogramTemplateBot.session-journal
+/PyrogramTemplateBot.log
+
