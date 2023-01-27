@@ -5,7 +5,7 @@ from maindata import config
 from pyrogram import Client
 
 api_id = "<PASTE_YOUR_DATA_HERE>"  # int awaited
-api_hash = "00<PASTE_YOUR_DATA_HERE>6c9"
+api_hash = "000<PASTE_YOUR_DATA_HERE>6c9"
 bot_token = "59<PASTE_YOUR_DATA_HERE>vk"
 
 app = Client(f"{config.name}",
