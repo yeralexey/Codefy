@@ -31,7 +31,7 @@ developers, for their will to make the world a better place to live.
 ## III. Bot folders and files.
 
 - `/entities`    - classes are kept, User and Interview;
-- `/locales`     - .jsons with bot answer texts, according to Plate library;
+- `/locales`     - .jsons with bot answer texts, according to [Plate](https://github.com/delivrance/plate) library;
 - `/maillogs`    - logs after messaging bot subscribers;
 - `/maindata`    - config, session files, database;
 - `/plugins`     - handlers, according to Pyrogram's 
