@@ -8,7 +8,7 @@ started. Please note, it does not perform confidentiality of personal and app da
 could be achieved, if minor changes in `loader.py` are made.
 - to initiate auto update code on server the sequence is:
   * `git init --bare`
-  * `nano /hooks/post-receive`
+  * `nano hooks/post-receive`
   * in post-receive: `git --work-tree=/home/PyrogramTemplateBot \
 --git-dir=/home/PyrogramTemplateBot/.git checkout -f` 
   * `chmod +x post-receive`
