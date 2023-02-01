@@ -7,10 +7,10 @@ logger = init_logger("utils.googlejobs")
 
 
 class GoogleWorker:
-    def __init__(self, credentials_file, spreadsheet_id):
+    def __init__(self, credentials_dict, spreadsheet_id):
         self.spreadsheet_id = spreadsheet_id
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(
-            credentials_file,
+        credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+            credentials_dict,
             ['https://www.googleapis.com/auth/spreadsheets',
              'https://www.googleapis.com/auth/drive'])
         http_auth = credentials.authorize(httplib2.Http())
