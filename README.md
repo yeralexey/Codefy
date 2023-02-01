@@ -1,7 +1,18 @@
-###### WARNING! README.md has not been modified after last changes were done. Only this note added.
-Main change - credentials file is encrypted, and data is not kept anywhere except it. Data is inputted on new project 
+###### WARNING! README.md modifications.
+
+I collect here non systemized in description modifications to project. If you see notes after this text, 
+please consider noted done in code, but still not described in README.md properly. Check commits if needed.
+
+- credentials became encrypted, and data is not kept anywhere except it. Data is inputted on new project 
 started. Please note, it does not perform confidentiality of personal and app data, if published by mistake. But it
 could be achieved, if minor changes in `loader.py` are made.
+- to initiate auto update code on server the sequence is:
+  * `git init --bare`
+  * `nano /hooks/post-receive`
+  * in post-receive: `git --work-tree=/home/PyrogramTemplateBot \
+--git-dir=/home/PyrogramTemplateBot/.git checkout -f` 
+  * `chmod +x post-receive`
+  
 
 # Template for Telegram bot.
 
