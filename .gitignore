@@ -1,8 +1,8 @@
 /.idea/
 /venv/
-/maindata/main.db
-/maindata/config.py
-/maindata/PyrogramTemplateBot.session
-/maindata/PyrogramTemplateBot.session-journal
-/PyrogramTemplateBot.log
-/activator.py
+*.db
+*.csv
+*.log
+*.txt
+*.session
+*.session-journal
