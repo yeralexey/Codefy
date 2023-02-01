@@ -1,4 +1,9 @@
-# Template for Telegram bot. 
+###### WARNING! README.md has not been modified after last changes were done. Only this note added.
+Main change - credentials file is encrypted, and data is not kept anywhere except it. Data is inputted on new project 
+started. Please note, it does not perform confidentiality of personal and app data, if published by mistake. But it
+could be achieved, if minor changes in `loader.py` are made.
+
+# Template for Telegram bot.
 
 
 Mostly for personal use. New plugins and utils may be added in the future. When I use
