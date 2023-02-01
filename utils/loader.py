@@ -33,7 +33,7 @@ class Config:
         app.stop()
 
         self.main_log = f"{workdir}{self.name}.log"
-        self.mail_logs = "/maillogs"
+        self.mail_logs = "maillogs/"
         self.db_file = f'{workdir}main.db'
         self.csv_file = f'{workdir}main.csv'
         with open(f"{workdir}googlecredentials.json", "r") as file:
