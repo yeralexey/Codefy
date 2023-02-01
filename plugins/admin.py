@@ -175,7 +175,7 @@ async def start_mailing(client, mail_list, mail_type, message):
 
     await Client.send_message(client, chat_id, plate("admin_send_started", user.chosen_language))
     try:
-        log_file_name = f"maillogs/{mail_type}{datetime.datetime.now()}.csv"
+        log_file_name = f"{config.mail_logs}{mail_type}{str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}.csv"
         with open(log_file_name, "w", encoding="utf-8") as file:
             if mail.caption:
                 description = mail.caption
@@ -184,10 +184,11 @@ async def start_mailing(client, mail_list, mail_type, message):
             else:
                 description = "no description"
             file.write(
-                f"date: {datetime.datetime.now()}. \nby: {chat_id}, \n\nmessage: {mail.id}\n\n"
+                f"date: {str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}. \nby: {chat_id}, "
+                f"\n\nmessage: {mail.id}\n\n"
                 f"description: {description[:50]}...\n\n________________\n\n")
         for mail_id in mail_list:
-            when = str(datetime.datetime.now())
+            when = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             if len(mail_id) < 3:
                 continue
             try:
