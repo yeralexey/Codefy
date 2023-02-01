@@ -131,8 +131,11 @@ async def proceed_interview(client, call):
 
 @Client.on_callback_query(filters.regex(pattern='send'))
 async def send_google(client, call):
-    user = await User.get_user(call.message.chat.id)
     client.stop_listening((call.message.chat.id, call.message.from_user.id, call.message.id))
+    if gw is None:
+        await Client.delete_messages(client, call.message.chat.id, [call.message.id])
+        return
+    user = await User.get_user(call.message.chat.id)
     await user.load_attributes()
     await Client.delete_messages(client, call.message.chat.id, call.message.id)
 
