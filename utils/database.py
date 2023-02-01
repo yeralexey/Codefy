@@ -1,11 +1,12 @@
 import os
 import asyncio
-from maindata import config
 import datetime
+from utils.loader import config
 from sqlitedict import SqliteDict
 
 from .logger import init_logger
 logger = init_logger("utils.database")
+
 
 class DatabaseWriter:
     def __init__(self, file=config.db_file, new_base=False):

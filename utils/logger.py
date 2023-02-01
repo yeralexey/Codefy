@@ -1,4 +1,4 @@
-from maindata import config
+from utils.loader import config
 import logging
 from logging import handlers
 

@@ -1,8 +1,9 @@
+from utils.loader import config
+
 import asyncio
 from asyncio import exceptions
 import datetime
 
-from maindata import config
 from utils import gw, cr, db, vd
 from entities import User, Interview
 
