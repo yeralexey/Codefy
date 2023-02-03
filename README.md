@@ -72,7 +72,7 @@ To get access to admin panel - admin id is to be specified in admins list, so it
 be checked in http://t.me/PyrogramTemplateBot.
 
 Simply run `/admin` to get menu and `/commands` to get commands list.
-Commands `/kill`, `/restart`, `/reboot` are tested in UBUNTU 18.04 only.
+Commands `/kill`, `/restart`, `/reboot` are tested in UBUNTU 20.04 only, correct path with `which` Linux command".
 
 
 ## VI. Bot menu.
