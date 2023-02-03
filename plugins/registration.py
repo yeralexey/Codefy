@@ -139,8 +139,6 @@ async def send_google(client, call):
     await user.load_attributes()
     await Client.delete_messages(client, call.message.chat.id, call.message.id)
 
-    if user.join_date is None:
-        await user.set_attribute("join_date", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     line = user.user_index
     if not line or type(line) != int:
         line = await User.main_index(get_next=True)
