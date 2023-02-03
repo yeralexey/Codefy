@@ -1,18 +1,45 @@
 ###### WARNING! README.md modifications.
 
-I collect here non systemized in description modifications to project. If you see notes after this text, 
-please consider noted done in code, but still not described in README.md properly. Check commits if needed.
+Non systemized in description modifications to project, installation recommendations - here. If you see notes after this 
+text, please consider noted done in code, but still not described in README.md properly. Check commits if needed.
 
 - credentials became encrypted, and data is not kept anywhere except it. Data is inputted on new project 
 started. Please note, it does not perform confidentiality of personal and app data, if published by mistake. But it
 could be achieved, if minor changes in `loader.py` are made.
-- to initiate auto update code on server the sequence is:
+- to initiate auto update code on server the sequence is (Ubuntu 20.04 tested):
+  * `mkdir <YOUR_PROJECT_NAME>`
+  * `cd <YOUR_PROJECT_NAME>`
+  * `mkdir .git`
+  * `cd .git`
   * `git init --bare`
-  * `nano /hooks/post-receive`
-  * in post-receive: `git --work-tree=/home/PyrogramTemplateBot \
---git-dir=/home/PyrogramTemplateBot/.git checkout -f` 
+  * `nano hooks/post-receive`
+  * in post-receive: 
+    ```commandline
+    git --work-tree=/home/<YOUR_PROJECT_NAME> \
+      --git-dir=/home/<YOUR_PROJECT_NAME>.git checkout -f
+
   * `chmod +x post-receive`
-  
+- sequence to create systemd daemon (Ubuntu 20.04 tested):
+  * `nano /etc/systemd/system/<YOUR_PROJECT_NAME>.service`
+  * in <YOUR_PROJECT_NAME>.service: 
+    ```commandline
+    [Unit]
+    Description=<YOUR_PROJECT_NAME>
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=root
+    WorkingDirectory=/home/<YOUR_PROJECT_NAME>
+    VIRTUAL_ENV=/home/<YOUR_PROJECT_NAME>/venv
+    Environment=PATH=$VIRTUAL_ENV/bin:$PATH
+    ExecStart=/home/<YOUR_PROJECT_NAME>/venv/bin/python /home/<YOUR_PROJECT_NAME>/main.py
+    Restart=on-failure
+    
+    [Install]
+    WantedBy=multi-user.target
+  * `systemctl enable <YOUR_PROJECT_NAME>`
+  * `systemctl start <YOUR_PROJECT_NAME>`
 
 # Template for Telegram bot.
 
