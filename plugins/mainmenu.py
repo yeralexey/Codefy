@@ -18,4 +18,3 @@ async def send_welcome_on_call(client, call):
     keyboard = ikb([[(plate("registration_button", user.chosen_language), 'proceed_lastname')]])
     await Client.edit_message_text(client, chat_id=call.message.chat.id, message_id=call.message.id,
                                    text=text, reply_markup=keyboard)
-

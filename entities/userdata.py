@@ -5,6 +5,7 @@ import datetime
 from utils.logger import init_logger
 logger = init_logger("entities.userdata")
 
+
 class User:
     """
     Represents a user and provides methods for interacting with the user's data. Please, make sure that description

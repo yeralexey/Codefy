@@ -18,7 +18,7 @@ async def proceed_interview(client, call):
     keyboard, step_flag = await step.get_keyboard(user.chosen_language)
 
     call_message = await Client.edit_message_text(client, call.message.chat.id, call.message.id,
-                                         text=text, reply_markup=keyboard, disable_web_page_preview=True)
+                                                  text=text, reply_markup=keyboard, disable_web_page_preview=True)
     if step_flag:
         await user.set_attribute("current_step", (step.name, call_message.chat.id, call_message.id))
     else:

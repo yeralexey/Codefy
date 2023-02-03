@@ -45,7 +45,7 @@ async def from_admins(client, message):
                             f'/commands - {plate("admin_its_commands", user.chosen_language)}')
 
 
-async def admin_menu(client, message):
+async def admin_menu(_, message):
     user = await User.get_user(message.chat.id)
     keyboard = ikb([
         [(plate("admin_menu_url", user.chosen_language),
