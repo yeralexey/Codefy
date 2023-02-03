@@ -72,7 +72,7 @@ To get access to admin panel - admin id is to be specified in admins list, so it
 be checked in http://t.me/PyrogramTemplateBot.
 
 Simply run `/admin` to get menu and `/commands` to get commands list.
-Commands `/kill`, `/restart`, `/reboot` are tested in UBUNTU 20.04 only, correct path with `which` Linux command".
+Commands `/kill`, `/restart`, `/reboot` are tested in UBUNTU 20.04 only, correct path with `which` Linux command.
 
 
 ## VI. Bot menu.
@@ -144,7 +144,7 @@ All methods for inputed by user data validation are in `/utils/validation.py`.
 
 Dictionary in `class User`, `/entities/userdata.py` in is not being emptied, only when bot is restarted. So be aware
 of it, it is not suitable for huge auditory. I will update it someday. Last user's action timestamp is saved to database,
-so if implement this feature - it should be based on excluding most long time ago users, I guess.
+so if to implement this feature - it should be based on excluding most long time ago users, I guess.
 
 
 ### Best regards to all you people, thanks for any useful hint, advice and healthy criticism.
