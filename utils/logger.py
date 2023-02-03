@@ -3,7 +3,7 @@ import logging
 from logging import handlers
 
 
-def init_logger(name, logger_level="DEBUG", file_level="INFO", console_level="INFO"):
+def init_logger(name, logger_level="DEBUG", file_level="INFO", console_level="DEBUG"):
     """
     "DEBUG", "INFO", "WARNING", "ERROR", or "CRITICAL"
     """
