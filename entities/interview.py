@@ -29,6 +29,7 @@ class Interview:
         self.datatest = True
         self.previous = None
         self.next = None
+        self.kill_all_buttons = None
         self.but_main1 = None
         self.but_main2 = None
         self.send_data = True
