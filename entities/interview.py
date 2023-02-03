@@ -1,7 +1,6 @@
 from .userdata import User
 
-from plate import Plate
-plate = Plate()
+from utils import plate
 
 from utils.logger import init_logger
 logger = init_logger("entities.interview")

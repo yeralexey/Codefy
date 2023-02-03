@@ -5,7 +5,10 @@ from .system import SystemController
 from .googlejobs import GoogleWorker
 
 from .logger import init_logger
-logger = init_logger('utils')
+logger = init_logger('main')
+
+from plate import Plate
+plate = Plate()
 
 vd = InputValidator()
 db = DatabaseWriter()

@@ -1,13 +1,9 @@
-from utils import db
+from utils import db, plate
 from typing import Union, Any
 import datetime
 
-from plate import Plate
-plate = Plate()
-
 from utils.logger import init_logger
 logger = init_logger("entities.userdata")
-
 
 class User:
     """
