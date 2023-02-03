@@ -29,7 +29,7 @@ class Interview:
         self.but_main1 = None
         self.but_main2 = None
         self.send_data = True
-        self.but_cancel = ("❌", "proceed_cancel")
+        self.but_cancel = ("❌", "cancel")
         i_dict[name] = self
         i_list.append(name)
         index = i_list.index(name)

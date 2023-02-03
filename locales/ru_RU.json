@@ -45,7 +45,6 @@
     "service_hint2": "Данные некорректны.",
 
     "registration_button": "Начнем",
-    "registration_cancelled": "Регистрация отменена, начать сначала - /start",
     "registration_send_fail_admin": "Ошибка отправки в Google",
     "registration_to_male": "Уважаемый",
     "registration_to_female": "Уважаемая",
@@ -88,5 +87,7 @@
     "admin_send_admin_fail": "ошибка рассылки",
 
     "button_backward": "⬅️     Назад",
-    "button_forward": "Далее     ➡️"
+    "button_forward": "Далее     ➡️",
+
+    "cancelled": "текущий процесс завершён"
 }

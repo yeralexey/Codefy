@@ -45,7 +45,6 @@
     "service_hint2": "Incorrect input.",
 
     "registration_button": "Proceed",
-    "registration_cancelled": "Agreement registration cancalled, reprocess registration - /start",
     "registration_send_fail_admin": "Failed to send Google",
     "registration_to_male": "Dear sir",
     "registration_to_female": "Dear madam",
@@ -88,5 +87,7 @@
     "admin_send_admin_fail": "broadcast fail",
 
     "button_backward": "⬅️     Back",
-    "button_forward": "Next     ➡️"
+    "button_forward": "Next     ➡️",
+
+    "cancelled": "current process cancelled"
 }

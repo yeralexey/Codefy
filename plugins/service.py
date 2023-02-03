@@ -1,14 +1,52 @@
 from main import *
 
 
-@Client.on_message(filters.private)
-async def kill_trash(client, message):
-    if message.media_group_id:
-        return
+@Client.on_callback_query(filters.regex(pattern='cancel'))
+async def cancel_button(client, call):
+    await cancel_command(client, call.message)
+
+
+@Client.on_message(filters.private & filters.command(['cancel']))
+async def cancel_command(client, message):
     user = await User.get_user(message.chat.id)
-    msg = await message.reply(plate("service_hint", user.chosen_language))
-    await asyncio.sleep(1)
-    await Client.delete_messages(client, message.chat.id, [message.id, msg.id])
+    client.stop_listening((message.chat.id, message.from_user.id, message.id))
+    text = plate("cancelled", user.chosen_language)
+    await Client.edit_message_text(client, chat_id=message.chat.id, message_id=message.id, text=text)
+
+
+@Client.on_message(filters.private & filters.command(['help']))
+async def send_help(client, message):
+    user = await User.get_user(message.chat.id)
+    text = plate("mainmenu_help_message", user.chosen_language)
+    await Client.send_message(client, chat_id=message.chat.id, text=text)
+
+
+@Client.on_message(filters.private & filters.command(['mydata']))
+async def send_mydata(client, message):
+    user = await User.get_user(message.chat.id)
+    data = await user.create_user_data(technical=True)
+    text = plate("mainmenu_your_data_is", user.chosen_language) + data if data \
+        else plate("mainmenu_your_data_missing", user.chosen_language)
+    await Client.send_message(client, chat_id=message.chat.id, text=text)
+
+
+@Client.on_message(filters.private & filters.command(['language']))
+async def choose_language(_, message):
+    user = await User.get_user(message.chat.id)
+    text = plate("mainmenu_choose_language", user.chosen_language)
+    keyboard = ikb([
+        [('🇷🇺Русский', '🇷🇺Русский::language-ru_RU')],
+        [('🇬🇧English', '🇬🇧English::language-en_US')]
+    ])
+    await message.reply(text=text, reply_markup=keyboard)
+
+
+@Client.on_callback_query(filters.regex(pattern='language'))
+async def set_language(client, call):
+    user = await User.get_user(call.message.chat.id)
+    await user.set_attribute("chosen_language", str(call.data).split("-")[1])
+    text = str(call.data).split("::")[0] + " " + plate("mainmenu_chosen_language", user.chosen_language)
+    await Client.edit_message_text(client, chat_id=call.message.chat.id, message_id=call.message.id, text=text)
 
 
 @Client.on_callback_query(filters.regex(pattern='send'))
@@ -61,3 +99,13 @@ async def send_google(client, call):
     await Client.send_chat_action(client, call.message.chat.id, ChatAction.TYPING)
     await asyncio.sleep(5)
     await Client.send_message(client, call.message.chat.id, text)
+
+
+@Client.on_message(filters.private)
+async def kill_trash(client, message):
+    if message.media_group_id:
+        return
+    user = await User.get_user(message.chat.id)
+    msg = await message.reply(plate("service_hint", user.chosen_language))
+    await asyncio.sleep(1)
+    await Client.delete_messages(client, message.chat.id, [message.id, msg.id])

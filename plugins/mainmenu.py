@@ -18,37 +18,3 @@ async def send_welcome_on_call(client, call):
     await Client.edit_message_text(client, chat_id=call.message.chat.id, message_id=call.message.id,
                                    text=text, reply_markup=keyboard)
 
-
-@Client.on_message(filters.private & filters.command(['help']))
-async def send_help(client, message):
-    user = await User.get_user(message.chat.id)
-    text = plate("mainmenu_help_message", user.chosen_language)
-    await Client.send_message(client, chat_id=message.chat.id, text=text)
-
-
-@Client.on_message(filters.private & filters.command(['mydata']))
-async def send_mydata(client, message):
-    user = await User.get_user(message.chat.id)
-    data = await user.create_user_data(technical=True)
-    text = plate("mainmenu_your_data_is", user.chosen_language) + data if data \
-        else plate("mainmenu_your_data_missing", user.chosen_language)
-    await Client.send_message(client, chat_id=message.chat.id, text=text)
-
-
-@Client.on_message(filters.private & filters.command(['language']))
-async def choose_language(client, message):
-    user = await User.get_user(message.chat.id)
-    text = plate("mainmenu_choose_language", user.chosen_language)
-    keyboard = ikb([
-        [('🇷🇺Русский', '🇷🇺Русский::language-ru_RU')],
-        [('🇬🇧English', '🇬🇧English::language-en_US')]
-    ])
-    await message.reply(text=text, reply_markup=keyboard)
-
-
-@Client.on_callback_query(filters.regex(pattern='language'))
-async def set_language(client, call):
-    user = await User.get_user(call.message.chat.id)
-    await user.set_attribute("chosen_language", str(call.data).split("-")[1])
-    text = str(call.data).split("::")[0] + " " + plate("mainmenu_chosen_language", user.chosen_language)
-    await Client.edit_message_text(client, chat_id=call.message.chat.id, message_id=call.message.id, text=text)
