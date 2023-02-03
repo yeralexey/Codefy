@@ -13,6 +13,7 @@ async def send_welcome_on_command(client, message):
 async def send_welcome_on_call(client, call):
     client.stop_listening((call.message.chat.id, call.message.from_user.id, call.message.id))
     user = await User.get_user(call.message.chat.id)
+    await user.set_attribute("current_step", None)
     text = plate("mainmenu_welcome_message", user.chosen_language)
     keyboard = ikb([[(plate("registration_button", user.chosen_language), 'proceed_lastname')]])
     await Client.edit_message_text(client, chat_id=call.message.chat.id, message_id=call.message.id,

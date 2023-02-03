@@ -3,15 +3,27 @@ from main import *
 
 @Client.on_callback_query(filters.regex(pattern='cancel'))
 async def cancel_button(client, call):
-    await cancel_command(client, call.message)
+    user = await User.get_user(call.message.chat.id)
+    client.stop_listening((call.message.chat.id, call.message.from_user.id, call.message.id))
+    await user.set_attribute("current_step", None)
+    text = plate("cancelled", user.chosen_language)
+    await Client.edit_message_text(client, chat_id=call.message.chat.id, message_id=call.message.id, text=text)
 
 
 @Client.on_message(filters.private & filters.command(['cancel']))
 async def cancel_command(client, message):
     user = await User.get_user(message.chat.id)
     client.stop_listening((message.chat.id, message.from_user.id, message.id))
+    read_step = await user.get_attribute("current_step")
+    if not read_step:
+        msg = await message.reply(plate("cancelled_nothing", user.chosen_language))
+        await asyncio.sleep(1)
+        await Client.delete_messages(client, message.chat.id, [message.id, msg.id])
+        return
     text = plate("cancelled", user.chosen_language)
-    await Client.edit_message_text(client, chat_id=message.chat.id, message_id=message.id, text=text)
+    step_name, call_message_chat, call_message_id = read_step[0], read_step[1], read_step[2]
+    await Client.edit_message_text(client, chat_id=call_message_chat, message_id=call_message_id, text=text)
+    await user.set_attribute("current_step", None)
 
 
 @Client.on_message(filters.private & filters.command(['help']))

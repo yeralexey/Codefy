@@ -90,5 +90,6 @@
     "button_backward": "⬅️     Назад",
     "button_forward": "Далее     ➡️",
 
-    "cancelled": "процесс остановлен"
+    "cancelled": "процесс остановлен",
+    "cancelled_nothing": "остановить нечего"
 }

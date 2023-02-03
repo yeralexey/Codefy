@@ -90,5 +90,6 @@
     "button_backward": "⬅️     Back",
     "button_forward": "Next     ➡️",
 
-    "cancelled": "process cancelled"
+    "cancelled": "process cancelled",
+    "cancelled_nothing": "nothing can be cancelled"
 }

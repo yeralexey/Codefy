@@ -44,8 +44,8 @@ could be achieved, if minor changes in `loader.py` are made.
   * `start - main menu`
   * `help - how to use`
   * `mydata - check your data`
-  * `language - cange language`
-  * `cancel - cancels current process`
+  * `language - choose language`
+  * `cancel - stop current process`
 
 # Template for Telegram bot.
 
@@ -147,12 +147,6 @@ Dictionary in `class User`, `/entities/userdata.py` in is not being emptied, onl
 of it, it is not suitable for huge auditory. I will update it someday. Last user's action timestamp is saved to database,
 so if implement this feature - it should be based on excluding most long time ago users, I guess.
 
-##### For [@usernain](https://github.com/usernein).
-
-Cezar, implementation you were interested - in `plugins/registration.py`. In works with class Interview,
-so any other question or data request is simply defined as class attribute, without
-messing up with code. Your new listener is in line 92. Code is not final, I keep
-playing with it.
 
 ### Best regards to all you people, thanks for any useful hint, advice and healthy criticism.
 

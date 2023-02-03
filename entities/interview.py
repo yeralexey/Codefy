@@ -5,6 +5,8 @@ from utils import plate
 from utils.logger import init_logger
 logger = init_logger("entities.interview")
 
+from pyromod.helpers import ikb
+
 
 class Interview:
     """
@@ -58,7 +60,7 @@ class Interview:
         else:
             return "OK ☑️", "send"
 
-    async def get_main_text(self, user_id):
+    async def get_text(self, user_id):
         user = await User.get_user(user_id)
         text = plate(f"interview_ask_{self.name}", user.chosen_language)
         if self.send_data is False:
@@ -66,6 +68,43 @@ class Interview:
         else:
             data = await user.create_user_data(self.name)
             return f'{data}\n\n**{text}**'
+
+    async def get_keyboard(self, language):
+
+        backward_button = await self.get_previous(language)
+        forward_button = await self.get_next(language)
+        cancel_button = self.but_cancel
+        choice_button1 = self.but_main1
+        choice_button2 = self.but_main2
+
+        keyboard, button_line1, button_line2 = None, None, None
+
+        if forward_button and not backward_button:
+            button_line2 = [forward_button, cancel_button]
+        elif backward_button and not forward_button:
+            button_line2 = [backward_button, cancel_button]
+        elif forward_button and backward_button:
+            button_line2 = [backward_button, forward_button, cancel_button]
+
+        if choice_button1 and not choice_button2:
+            button_line1 = [choice_button1]
+        elif choice_button1 and choice_button2:
+            button_line1 = [choice_button1, choice_button2]
+
+        if button_line1:
+            keyboard = ikb([button_line1, button_line2])
+            step_flag = False   # if buttons to be used as input, no need to create text await
+        else:
+            keyboard = ikb([button_line2])
+            step_flag = True   # if there is only backward-forward buttons - so we await text input
+
+        if self.kill_all_buttons is True:
+            keyboard = None
+
+        if not self.next:
+            step_flag = False  # if it is last iteration, no input text is awaited in current configuration
+
+        return keyboard, step_flag
 
     @classmethod
     async def get_step(cls, key):
