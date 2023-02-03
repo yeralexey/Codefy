@@ -40,6 +40,12 @@ could be achieved, if minor changes in `loader.py` are made.
     WantedBy=multi-user.target
   * `systemctl enable <YOUR_PROJECT_NAME>`
   * `systemctl start <YOUR_PROJECT_NAME>`
+- Current bot menu:
+  * `start - main menu`
+  * `help - how to use`
+  * `mydata - check your data`
+  * `language - cange language`
+  * `cancel - cancels current process`
 
 # Template for Telegram bot.
 
