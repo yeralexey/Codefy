@@ -31,6 +31,7 @@ class User:
         self.last_act = None
         self.is_active = None
         self.is_sent = None
+        self.current_step = None
 
     async def get_attribute(self, attribute: str, setit=True) -> Union[Any, bool]:
         value = await db.read_attr(self.user_id, attribute)

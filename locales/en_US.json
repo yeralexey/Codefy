@@ -15,6 +15,7 @@
     "userdata_last_act": "Last activity",
     "userdata_is_active": "Acive",
     "userdata_is_sent": "Data sent",
+    "userdata_current_step": "Interview state",
 
     "interview_ask_lastname": "Fill registration data. \n\nPlease, input your last name:",
     "interview_ask_name": "\n\nYour name:",

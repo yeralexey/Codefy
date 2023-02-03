@@ -15,8 +15,9 @@
     "userdata_last_act": "Последнее действие",
     "userdata_is_active": "Активен",
     "userdata_is_sent": "Данные отправлены",
+    "userdata_current_step": "Этап диалога",
 
-    "interview_ask_lastname": "Заполнените регистрационные данные. \n\nПожалуйста, укажите фамилию:",
+    "interview_ask_lastname": "Заполните регистрационные данные. \n\nПожалуйста, укажите фамилию:",
     "interview_ask_name": "\n\nВаше имя:",
     "interview_ask_patronymic": "\n\nВаше отчество, или иное имя:",
     "interview_ask_email": "\n\nВаш Email:",
