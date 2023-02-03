@@ -18,8 +18,11 @@ class Interview:
     interview_list = []
 
     def __init__(self, name):
-        i_dict = Interview.interview_dict
-        i_list = Interview.interview_list
+        if not hasattr(self.__class__, 'interview_dict'):
+            self.__class__.interview_dict = {}
+            self.__class__.interview_list = []
+        i_dict = self.__class__.interview_dict
+        i_list = self.__class__.interview_list
         self.name = name
         self.user = User.get_user
         self.apenddata = User.set_attribute
@@ -63,6 +66,13 @@ class Interview:
             data = await user.create_user_data(self.name)
             return f'{data}\n\n**{text}**'
 
-    @staticmethod
-    async def get_step(key):
-        return Interview.interview_dict[key]
+    @classmethod
+    async def get_step(cls, key):
+        return cls.interview_dict[key]
+
+
+# class AskGirls(Interview):
+#     pass
+#
+# class AskBoys(Interview):
+#     pass
