@@ -1,3 +1,8 @@
+"""
+All Interview instances from questionary.py are processed with these two functions. Step is chosen by callback data
+if processed by buttons, and by fsm-like algorithm, with step saved in database, as user's attribute.
+"""
+
 from main import *
 
 
