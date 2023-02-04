@@ -1,5 +1,7 @@
 from utils.loader import config
 
+import uvloop
+
 import asyncio
 from asyncio import exceptions
 import datetime
@@ -17,6 +19,7 @@ from pyromod.helpers import ikb
 if __name__ == '__main__':
     logger.info("app started")
     plugins = dict(root="plugins")
+    uvloop.install()
     Client(config.name,
            workdir=config.workdir,
            session_string=config.session,
