@@ -4,7 +4,8 @@ import pickle
 import base64
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-fernet = Scrypt(salt=bytes(612), length=32, n=2**14, r=8, p=1).derive("fernet".encode())
+
+fernet = Scrypt(salt=bytes(612), length=32, n=2 ** 14, r=8, p=1).derive("fernet".encode())
 fernet = base64.urlsafe_b64encode(fernet)
 fernet = Fernet(fernet)
 
@@ -24,13 +25,13 @@ class Config:
         bot_token = input("bot token :")
         self.main_sheet = input("google sheet :")
 
-        app = Client(f"{self.name}",
-                     api_id=api_id,
-                     api_hash=api_hash,
-                     bot_token=bot_token,
-                     workdir=workdir)
-        app.start()
-        app.stop()
+        with Client(f"{self.name}",
+                    api_id=api_id,
+                    api_hash=api_hash,
+                    bot_token=bot_token,
+                    workdir=workdir,
+                    in_memory=True) as app:
+            self.session = app.export_session_string()
 
         self.main_log = f"{workdir}{self.name}.log"
         self.mail_logs = "maillogs/"
@@ -40,8 +41,9 @@ class Config:
             self.google_credentials = json.load(file)
         self.admins = [self.owner]
 
+
 try:
-    with open(f"{workdir}temp.session", "rb") as file:
+    with open(f"{workdir}bot.session", "rb") as file:
         data = file.read()
     data = fernet.decrypt(data)
     config = pickle.loads(data)
@@ -50,5 +52,5 @@ except FileNotFoundError:
     config = Config()
     data = pickle.dumps(config)
     data = fernet.encrypt(data)
-    with open(f"{workdir}temp.session", "wb") as file:
+    with open(f"{workdir}bot.session", "wb") as file:
         file.write(data)

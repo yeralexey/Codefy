@@ -17,4 +17,8 @@ from pyromod.helpers import ikb
 if __name__ == '__main__':
     logger.info("app started")
     plugins = dict(root="plugins")
-    Client(config.name, workdir=config.workdir, plugins=plugins).run()
+    Client(config.name,
+           workdir=config.workdir,
+           session_string=config.session,
+           plugins=plugins
+           ).run()
