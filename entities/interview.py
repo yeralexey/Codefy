@@ -1,11 +1,9 @@
 from .userdata import User
-
+from pyromod.helpers import ikb
 from utils import plate
 
 from utils.logger import init_logger
 logger = init_logger("entities.interview")
-
-from pyromod.helpers import ikb
 
 
 class Interview:
@@ -14,6 +12,17 @@ class Interview:
     canceling, and confirming. The class also has a dictionary and list for storing all the interview steps,
     and a method for getting the current step by name. In this example - instances are created in
     /plugins/registration.py, for collecting users personal data.
+
+    Commented classes below - are examples, how different Interview branches can be set up. Simply inherit class
+    Interview, and create instances. Certain corrections should be done in plugins/registration.py, so in proceeds not
+    Interview steps but from inherited classes ones.
+
+    class AskGirls(Interview):
+        pass
+
+    class AskBoys(Interview):
+        pass
+
     """
 
     interview_dict = {}
@@ -109,10 +118,3 @@ class Interview:
     @classmethod
     async def get_step(cls, key):
         return cls.interview_dict[key]
-
-
-# class AskGirls(Interview):
-#     pass
-#
-# class AskBoys(Interview):
-#     pass
