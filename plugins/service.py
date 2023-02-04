@@ -72,17 +72,15 @@ async def send_google(client, call):
     await Client.delete_messages(client, call.message.chat.id, call.message.id)
 
     line = user.user_index
-    if not line or type(line) != int:
-        line = await User.main_index(get_next=True)
-        if line == 2:
-            values = [await User.get_attribute_list()]
-            send_google = await gw.sheet_write(config.main_sheet, major_dimension="rows",
-                                               range_marks=f"a{1}:z{1}", values_list=values)
-            if not send_google:
-                text_to_admin = plate("registration_send_fail_admin", user.chosen_language)
-                await Client.send_message(client, chat_id=config.admins[0], text=text_to_admin)
-                return
-        await user.set_attribute("user_index", line)
+
+    if line == 2:
+        values = [await User.get_attribute_list()]
+        send_google = await gw.sheet_write(config.main_sheet, major_dimension="rows",
+                                           range_marks=f"a{1}:z{1}", values_list=values)
+        if not send_google:
+            text_to_admin = plate("registration_send_fail_admin", user.chosen_language)
+            await Client.send_message(client, chat_id=config.admins[0], text=text_to_admin)
+            return
 
     if user.gender == "male":
         text_gender_part = plate("registration_to_male", user.chosen_language)
