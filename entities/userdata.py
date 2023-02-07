@@ -13,7 +13,7 @@ class User:
     command, check create_user_data method below.
     """
     user_dict = {}
-    default_language = "ru_RU"
+    default_language = "en_US"
 
     def __init__(self, user_id: int):
         self.user_index = None

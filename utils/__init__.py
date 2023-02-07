@@ -17,5 +17,4 @@ cr = SystemController(config.name)
 try:
     gw = GoogleWorker(config.google_credentials, config.main_sheet)
 except ValueError:
-    logger.info("no google credentials")
     gw = None
