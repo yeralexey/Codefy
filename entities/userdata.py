@@ -50,10 +50,6 @@ class User:
             return False
         return True
 
-    async def act(self):
-        result = await self.set_attribute("last_act", str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        return result
-
     async def load_attributes(self) -> bool:
         for attr in self.__dict__.keys():
             try:
@@ -98,22 +94,28 @@ class User:
         return result
 
     @classmethod
-    async def get_user(cls, user_id: int, user_name=None, set_active=False) -> "User":
+    async def get_user(cls, user_id: int, user_name=None, set_active=True, first_boot=False):
         user = cls.user_dict.setdefault(user_id, User(user_id))
-        await user.act()
-        if user.chosen_language is None:
-            await user.get_attribute("chosen_language")
-            if user.chosen_language is None:
-                await user.set_attribute("user_id", user_id)
-                await user.set_attribute("user_name", user_name)
-                await user.set_attribute("chosen_language", cls.default_language)
-                await user.set_attribute("join_date", str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-                index = await User.main_index(get_next=True)
-                await user.set_attribute("user_index", index)
-                await user.set_attribute("is_active", False)
-                await user.set_attribute("is_sent", False)
+        await user.set_attribute("last_act", str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+
+        if first_boot:
+            await user.set_attribute("user_id", user_id)
+            await user.set_attribute("user_name", user_name)
+            await user.set_attribute("chosen_language", cls.default_language)
+            await user.set_attribute("join_date", str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            index = await User.main_index(get_next=True)
+            await user.set_attribute("user_index", index)
+            await user.set_attribute("is_active", False)
+            await user.set_attribute("is_sent", False)
+
+        if user.join_date is None:
+            await user.get_attribute("join_date")
+            if user.join_date is None:
+                return "ask"
+
         if set_active is True:
             await user.set_attribute("is_active", True)
+            await user.get_attribute("user_name")
         return user
 
     @classmethod

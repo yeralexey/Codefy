@@ -12,6 +12,9 @@ from entities import User, Interview
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
 
+from pyrogram.types import (InlineQueryResultArticle, InlineQueryResultAnimation, InputTextMessageContent,
+                            InlineKeyboardMarkup, InlineKeyboardButton)
+
 import pyromod
 from pyromod import listen
 from pyromod.helpers import ikb

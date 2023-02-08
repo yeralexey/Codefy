@@ -49,6 +49,8 @@ class DatabaseWriter:
             with SqliteDict(self.file, outer_stack=False, flag='r') as db:
                 try:
                     result = db[key]
+                except KeyError:
+                    return None
                 except Exception as err:
                     logger.exception(err)
                     result = False
