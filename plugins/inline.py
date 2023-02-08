@@ -118,9 +118,12 @@ async def in_line_result(client, inline_result):
 
         answer = await askopenai.ask_code(question=question, identificator=f"test~{user.user_id}", prompt_final=None)
         answer = answer["choices"][0]["text"]
-        answer = f"```{str(answer).replace('`', '')}```"
 
-        result = await nekobin_it(content=answer, author=user.user_name)
+        nekobin_answer = str(answer).replace('`', '')
+
+        answer = f"```{nekobin_answer}```"
+
+        result = await nekobin_it(content=nekobin_answer, author=user.user_name)
         text = f"Function,that **{inline_result.query}:**\n{answer}\n\n{result}"
 
     await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
