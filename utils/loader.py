@@ -23,6 +23,7 @@ class Config:
         api_id = int(input("api id :"))
         api_hash = input("api hash :")
         bot_token = input("bot token :")
+        self.openai_key = input("openai key :")
         self.main_sheet = input("google sheet :")
 
         with Client(f"{self.name}",
