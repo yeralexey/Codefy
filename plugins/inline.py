@@ -72,4 +72,4 @@ async def nekobin_it(content, title="test function", author="CodeAiBot"):
     if neko.url[-4:] != "None":
         return neko.url + ".py"
     else:
-        return "Nekobin.com refuse, too many pastes from ip"
+        return "Nekobin.com refuse, flood wait."
