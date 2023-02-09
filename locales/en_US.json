@@ -89,7 +89,7 @@
 
     "button_backward": "⬅️     Back",
     "button_forward": "Next     ➡️",
-    "botton_cancel": "❌",
+    "button_cancel": "❌",
 
     "cancelled": "process cancelled",
     "cancelled_nothing": "nothing can be cancelled",

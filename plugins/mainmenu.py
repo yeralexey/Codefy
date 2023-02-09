@@ -7,7 +7,6 @@ async def send_welcome_on_command(client, message):
     if user == "ask":
         user = await User.get_user(user_id=message.from_user.id, user_name=message.from_user.username,
                                    first_boot=True)
-    print(user)
     text = plate("mainmenu_welcome_message", user.chosen_language)
     keyboard = ikb([[(plate("registration_button", user.chosen_language), 'proceed_lastname')]])
     await Client.send_message(client, chat_id=message.chat.id, text=text, reply_markup=keyboard)

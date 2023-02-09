@@ -30,6 +30,7 @@ async def nekobin_it(content, title="test function", author="CodeAiBot"):
 
 @Client.on_inline_query()
 async def inline_answer(client, inline_query):
+    print(inline_query)
     user = await User.get_user(user_id=inline_query.from_user.id)
     if user == "ask":
         user = await User.get_user(user_id=inline_query.from_user.id, user_name=inline_query.from_user.username,
@@ -41,13 +42,13 @@ async def inline_answer(client, inline_query):
                 description='with docstrings and description, complete phrase "function, that..."',
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=python_uid,
-                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/create_func_icon.png",
+                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/create_func_icon.jpg",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [InlineKeyboardButton(
-                            plate("cancel_button", user.chosen_language),
+                            plate("button_cancel", user.chosen_language),
                             callback_data="cancel"
                         )]
                     ]
@@ -60,13 +61,13 @@ async def inline_answer(client, inline_query):
                 description="save and share the link of your python code  in elegant way. (len(code)<500)",
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=neko_uid,
-                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/paste_necobin_icon.png",
+                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/paste_necobin_icon.jpg",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [InlineKeyboardButton(
-                            plate("cancel_button", user.chosen_language),
+                            plate("button_cancel", user.chosen_language),
                             callback_data="cancel"
                         )]
                     ]
@@ -80,6 +81,7 @@ async def inline_answer(client, inline_query):
 
 @Client.on_chosen_inline_result()
 async def in_line_result_neko(client, inline_result):
+    print(inline_result)
     if inline_result.result_id != neko_uid:
         raise ContinuePropagation
 
@@ -90,7 +92,7 @@ async def in_line_result_neko(client, inline_result):
     reply_markup = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton(
-                plate("cancel_button", user.chosen_language),
+                plate("button_cancel", user.chosen_language),
                 callback_data="cancel"
             )]
         ]
@@ -132,7 +134,7 @@ async def in_line_result(client, inline_result):
     reply_markup = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton(
-                plate("cancel_button", user.chosen_language),
+                plate("button_cancel", user.chosen_language),
                 callback_data="cancel"
             )]
         ]
