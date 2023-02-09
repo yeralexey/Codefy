@@ -37,39 +37,42 @@ async def inline_answer(client, inline_query):
     await inline_query.answer(
         results=[
             InlineQueryResultArticle(
-                title="Nekobin.com",
-                description="Paste, save and share the link of your python code  in elegant way. (len(code)<500)",
-                input_message_content=InputTextMessageContent("Generating...⏳"),
-                id=neko_uid,
-                thumb_url="https://nekobin.com/static/img/nekobin.jpg",
+                title="Generate function",
+                description='with docstrings and description, complete phrase "function, that..."',
+                input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
+                id=python_uid,
+                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/create_func_icon.png",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [InlineKeyboardButton(
-                            "Powered by Nekobin.com",
-                            url="https://Nekobin.com"
+                            plate("cancel_button", user.chosen_language),
+                            callback_data="cancel"
                         )]
                     ]
                 )
             ),
+
+
             InlineQueryResultArticle(
-                title="Python function",
-                description='Create python function, complete phrase "Function, that..."',
-                input_message_content=InputTextMessageContent("Generating...⏳"),
-                id=python_uid,
-                thumb_url="https://i.pinimg.com/564x/4d/13/d5/4d13d55d6d0b38b7a4e85fcf97ff6279.jpg",
+                title="Paste nekobin.com,",
+                description="save and share the link of your python code  in elegant way. (len(code)<500)",
+                input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
+                id=neko_uid,
+                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/paste_necobin_icon.png",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [InlineKeyboardButton(
-                            "Powered by Nekobin.com",
-                            url="https://Nekobin.com"
+                            plate("cancel_button", user.chosen_language),
+                            callback_data="cancel"
                         )]
                     ]
                 )
-            )
+            ),
+
         ],
         cache_time=1
     )
@@ -79,26 +82,25 @@ async def inline_answer(client, inline_query):
 async def in_line_result_neko(client, inline_result):
     if inline_result.result_id != neko_uid:
         raise ContinuePropagation
-        return
 
     user = await User.get_user(user_id=inline_result.from_user.id)
     code_to_paste = inline_result.query
     result = await nekobin_it(content=code_to_paste, author=user.user_name)
 
-    # reply_markup = InlineKeyboardMarkup(
-    #     [
-    #         [InlineKeyboardButton(
-    #             "Open in Nekobin.com",
-    #             url=f"{result}"
-    #         )]
-    #     ]
-    # )
+    reply_markup = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton(
+                plate("cancel_button", user.chosen_language),
+                callback_data="cancel"
+            )]
+        ]
+    )
 
-    await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=result,
-                                  disable_web_page_preview=True)
-    # await Client.edit_inline_reply_markup(client, inline_message_id=inline_result.inline_message_id,
-    #                                       reply_markup=None)
-
+    try:
+        await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=result,
+                                      disable_web_page_preview=True, reply_markup=reply_markup)
+    except Exception as err:
+        print(err)
 
 
 
@@ -106,12 +108,11 @@ async def in_line_result_neko(client, inline_result):
 async def in_line_result(client, inline_result):
     if inline_result.result_id != python_uid:
         raise ContinuePropagation
-        return
 
     user = await User.get_user(user_id=inline_result.from_user.id)
 
     if len(str(inline_result.query)) < 25:
-        text = "provide sufficient description, more 25 chars"
+        text = plate("inline_insufficient_description")
     else:
         question = f"###Write a python function with an elaborate, high quality docstrings, explaining what the " \
                    f"function does and how to use it, that {inline_result.query}:"
@@ -119,18 +120,26 @@ async def in_line_result(client, inline_result):
         answer = await askopenai.ask_code(question=question, identificator=f"test~{user.user_id}", prompt_final=None)
         answer = answer["choices"][0]["text"]
 
-        nekobin_answer = str(answer).replace('`', '')
+        raw_result = str(answer).replace('`', '')
 
-        answer = f"```{nekobin_answer}```"
+        in_code_result = f"```{raw_result}```"
 
-        result = await nekobin_it(content=nekobin_answer, author=user.user_name)
-        text = f"Function,that **{inline_result.query}:**\n{answer}\n\n{result}"
+        neko_link = await nekobin_it(content=raw_result, author=user.user_name)
 
-    await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
-                                  disable_web_page_preview=True)
-    # await Client.edit_inline_reply_markup(client, inline_message_id=inline_result.inline_message_id,
-    #                                       reply_markup=None)
+        text = f"...`{inline_result.query}`:\n\n{in_code_result}\n\n{neko_link}"
 
 
+    reply_markup = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton(
+                plate("cancel_button", user.chosen_language),
+                callback_data="cancel"
+            )]
+        ]
+    )
 
-
+    try:
+        await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
+                                      disable_web_page_preview=True, reply_markup=reply_markup)
+    except Exception as err:
+        print(err)

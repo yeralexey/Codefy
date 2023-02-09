@@ -89,7 +89,11 @@
 
     "button_backward": "⬅️     Back",
     "button_forward": "Next     ➡️",
+    "botton_cancel": "❌",
 
     "cancelled": "process cancelled",
-    "cancelled_nothing": "nothing can be cancelled"
+    "cancelled_nothing": "nothing can be cancelled",
+
+    "inline_generating": "Generating...⏳",
+    "inline_insufficient_description": "provide sufficient description, more 25 chars"
 }
