@@ -1,14 +1,12 @@
 from main import *
-
+from pyrogram import ContinuePropagation
+from aimodels import askopenai
 from utils.nekobin import *
 from uuid import uuid4
 nekobin = NekoBin()
 neko_uid = str(uuid4())
 python_uid = str(uuid4())
-from pyrogram import ContinuePropagation
 
-
-from aimodels import askopenai
 
 
 
