@@ -36,6 +36,7 @@
     "validation_invalid_url": "Sorry, the URL is not valid.",
 
     "mainmenu_welcome_message": "Main menu:",
+    "mainmenu_inline_message": "Now you can use me [inline](https://telegram.org/blog/inline-bots), congratulations",
     "mainmenu_help_message": "The bot is controlled using quick navigation commands and through the \"Main menu\".\n\nTo call the Main menu, use the command /start. \n\nCommands are entered starting with the symbol \"/\", for example: \"/language\". \n\nA list of available commands can be accessed by pressing the \"Menu\" button in the lower left corner of the bot control window." ,
     "mainmenu_your_data_is": "Your data:\n\n\n",
     "mainmenu_your_data_missing": "No data in the database.",

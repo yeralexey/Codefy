@@ -15,9 +15,6 @@ from pyrogram.enums import ChatAction
 from pyrogram.types import (InlineQueryResultArticle, InlineQueryResultAnimation, InputTextMessageContent,
                             InlineKeyboardMarkup, InlineKeyboardButton)
 
-import pyromod
-from pyromod import listen
-from pyromod.helpers import ikb
 
 if __name__ == '__main__':
     logger.info("app started")
