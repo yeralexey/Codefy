@@ -48,8 +48,8 @@ async def inline_answer(client, inline_query):
                 description='with docstrings and typehints. Simply continue "function, that will..."',
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=python_uid,
-                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/"
-                          "create_func_icon.jpg?raw=true",
+                thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
+                          "create_func_icon.jpg",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
@@ -68,8 +68,8 @@ async def inline_answer(client, inline_query):
                 description="save and share the link of your python code  in elegant way, len(code)<500",
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=neko_uid,
-                thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/"
-                          "paste_nekobin_icon.jpg?raw=true",
+                thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
+                          "paste_nekobin_icon.jpg",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
