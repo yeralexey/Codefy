@@ -45,11 +45,11 @@ async def inline_answer(client, inline_query):
         results=[
             InlineQueryResultArticle(
                 title="Generate function",
-                description='with docstrings, typehints and description, complete phrase "function, that will..."',
+                description='with docstrings and typehints. Simply continue "function, that will..."',
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=python_uid,
                 thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/"
-                          "create_funk_icon.jpg?raw=true",
+                          "create_func_icon.jpg?raw=true",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
@@ -65,11 +65,11 @@ async def inline_answer(client, inline_query):
 
             InlineQueryResultArticle(
                 title="Paste nekobin.com,",
-                description="save and share the link of your python code  in elegant way. (len(code)<500)",
+                description="save and share the link of your python code  in elegant way, len(code)<500",
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=neko_uid,
                 thumb_url="https://github.com/yeralexey/Codefy/blob/master/maindata/icons/"
-                          "paste_necobin_icon.jpg?raw=true",
+                          "paste_nekobin_icon.jpg?raw=true",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
@@ -197,6 +197,5 @@ async def in_line_result(client, inline_result):
 
 @Client.on_callback_query(filters.regex("inline_remove"))
 async def in_line_callback(client, call):
-    print(call)
     text = "removed..."
     await Client.edit_inline_text(client, inline_message_id=call.inline_message_id, text=text)
