@@ -96,5 +96,6 @@
     "cancelled_nothing": "nothing can be cancelled",
 
     "inline_generating": "Generating...⏳",
-    "inline_insufficient_description": "provide sufficient description, more 25 chars"
+    "inline_insufficient_description": "provide sufficient description, more 25 chars...",
+    "inline2_insufficient_description": "doesn't seem to be a sufficient code..."
 }

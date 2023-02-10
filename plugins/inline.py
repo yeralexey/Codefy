@@ -30,11 +30,6 @@ async def nekobin_it(content, title="test function", author="CodeAiBot"):
         return "Nekobin.com refuse, flood wait."
 
 
-# @Client.on_chosen_inline_result(filters.regex("cancel_inline"))
-# async def inline_callback(client, inline_callback):
-#     print(inline_callback)
-
-
 @Client.on_inline_query()
 async def inline_answer(client, inline_query):
     user = await User.get_user(user_id=inline_query.from_user.id)
@@ -93,8 +88,6 @@ async def in_line_result_neko(client, inline_result):
         raise ContinuePropagation
 
     user = await User.get_user(user_id=inline_result.from_user.id)
-    code_to_paste = inline_result.query
-    result = await nekobin_it(content=code_to_paste, author=user.user_name)
 
     reply_markup = InlineKeyboardMarkup(
         [
@@ -104,6 +97,20 @@ async def in_line_result_neko(client, inline_result):
             )]
         ]
     )
+
+    # Checking query before processing
+
+    if len(str(inline_result.query)) < 25:
+        text = plate("inline2_insufficient_description")
+        try:
+            await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
+                                          disable_web_page_preview=True, reply_markup=reply_markup)
+        except Exception as err:
+            logger.exception(err)
+        return
+
+
+    result = await nekobin_it(content=inline_result.query, author=user.user_name)
 
     try:
         await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=result,
