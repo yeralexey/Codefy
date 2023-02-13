@@ -13,7 +13,7 @@ from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
 
 from pyrogram.types import (InlineQueryResultArticle, InlineQueryResultAnimation, InputTextMessageContent,
-                            InlineKeyboardMarkup, InlineKeyboardButton)
+                            InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup)
 
 
 if __name__ == '__main__':

@@ -58,7 +58,7 @@ async def inline_answer(client, inline_query):
 
             InlineQueryResultArticle(
                 title="Paste nekobin.com,",
-                description="save and share the link of your python code  in elegant way, len(code)<500",
+                description="save and share the link of your python code  in elegant way, len(code)<500.",
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=neko_uid,
                 thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
@@ -70,6 +70,25 @@ async def inline_answer(client, inline_query):
                         [InlineKeyboardButton(
                             plate("button_cancel", user.chosen_language),
                             callback_data="inline_remove"
+                        )]
+                    ]
+                )
+            ),
+
+            InlineQueryResultArticle(
+                title="Share Codify",
+                description="with friends.",
+                input_message_content=InputTextMessageContent("[Welcome to](https://t.me/CodefyChannel/28)"),
+                thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
+                          "share_icn.jpg",
+                thumb_width=5,
+                thumb_height=5,
+
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [InlineKeyboardButton(
+                            "Join",
+                            url="https://t.me/CodefyChannel/28"
                         )]
                     ]
                 )

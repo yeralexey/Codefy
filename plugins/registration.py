@@ -30,7 +30,7 @@ async def proceed_interview(client, call):
         await user.set_attribute("current_step", None)
 
 
-@Client.on_message()
+@Client.on_message(filters.private)
 async def proceed_interview_text(client, message):
     user = await User.get_user(message.chat.id)
 
