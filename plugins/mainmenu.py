@@ -8,10 +8,10 @@ async def send_welcome_on_command(client, message):
         user = await User.get_user(user_id=message.from_user.id, user_name=message.from_user.username,
                                    first_boot=True)
 
-    text = "[readme](https://telegra.ph/Codefy-guide-02-10) at first!"
+    text = "Please, [readme](https://telegra.ph/Codefy-guide-02-10) at first!"
     await Client.send_message(client, chat_id=message.chat.id, text=text)
 
-    text = "Done? Please"
+    text = "Done?"
 
     keyboard = InlineKeyboardMarkup([[
         InlineKeyboardButton(
