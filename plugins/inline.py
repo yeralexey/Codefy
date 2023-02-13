@@ -4,10 +4,11 @@ from aimodels import askopenai
 from utils.nekobin import *
 from uuid import uuid4
 nekobin = NekoBin()
-neko_uid = str(uuid4())
+neko_uid = str(uuid4()) # TODO Findgood way to generate one for all, but to generate inside inline_answer - to many calcs?...
 python_uid = str(uuid4())
 
 
+# TODO Refactored, dry fails.
 
 
 async def nekobin_it(content, title="test function", author="CodeAiBot"):
@@ -42,7 +43,7 @@ async def inline_answer(client, inline_query):
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=python_uid,
                 thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                          "create_func_icn.jpg",
+                          "create_func_icn.jpg",  # TODO change to a styled one
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
@@ -62,7 +63,7 @@ async def inline_answer(client, inline_query):
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=neko_uid,
                 thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                          "paste_nekobin_icn.jpg",
+                          "paste_nekobin_icn.jpg", # TODO change to a styled one
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(

@@ -1,5 +1,7 @@
 from main import *
 
+# TODO Since pyromod was removed from project - need to change buttons implementation + answers to get
+
 
 @Client.on_message(filters.private & filters.user(config.admins) & filters.command(
     ['restart', 'reboot', 'kill', 'setindex', 'admin', 'commands']))

@@ -62,7 +62,7 @@ async def ask_code(question, user_id, prompt_final):
         model=model,
         prompt=question,
         temperature=0,
-        max_tokens=1200,
+        max_tokens=3300,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,

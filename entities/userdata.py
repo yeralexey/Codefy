@@ -6,6 +6,8 @@ from utils.logger import init_logger
 logger = init_logger("entities.userdata")
 
 
+# TODO Ideas for users data to proceed: numbers of generations, ranks, shares to increase ranking, last act, etc.
+
 class User:
     """
     Represents a user and provides methods for interacting with the user's data. Please, make sure that description
