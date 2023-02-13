@@ -78,7 +78,7 @@ async def inline_answer(client, inline_query):
 
             InlineQueryResultArticle(
                 title="Share Codefy,",
-                description="don't wait, do it now and be a part of something big!",
+                description="join the movement towards a better code!",
                 input_message_content=InputTextMessageContent("[Welcome to](https://t.me/CodefyChannel/28)"),
                 thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
                           "share_icn.jpg",
