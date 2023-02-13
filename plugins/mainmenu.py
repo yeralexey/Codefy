@@ -31,7 +31,7 @@ async def about_inline(client, call):
                                    first_boot=True)
     await Client.delete_messages(client, chat_id=call.message.chat.id, message_ids=call.message.id)
     text = plate("mainmenu_inline_message", user.chosen_language)
-    await Client.send_message(client, chat_id=call.message.chat.id, text=text)
+    await Client.send_message(client, chat_id=call.message.chat.id, text=text, disable_web_page_preview=True)
 
 
     # channel = -1001796429321
