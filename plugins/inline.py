@@ -43,7 +43,7 @@ async def inline_answer(client, inline_query):
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=python_uid,
                 thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                          "create_func_icn.jpg",
+                          "func_icn.jpg",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
@@ -63,7 +63,7 @@ async def inline_answer(client, inline_query):
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=neko_uid,
                 thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                          "paste_nekobin_icn.jpg",
+                          "nb_icn.jpg",
                 thumb_width=5,
                 thumb_height=5,
                 reply_markup=InlineKeyboardMarkup(
