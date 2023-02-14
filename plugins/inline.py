@@ -34,7 +34,7 @@ async def inline_answer(client, inline_query):
     user = await User.get_user(user_id=inline_query.from_user.id)
     if user == "ask":
         user = await User.get_user(user_id=inline_query.from_user.id, user_name=inline_query.from_user.username,
-                                   first_boot=True)
+                                   first_boot=True, set_active=False)
     await inline_query.answer(
         results=[
             InlineQueryResultArticle(
