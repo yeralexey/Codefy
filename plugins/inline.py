@@ -31,73 +31,102 @@ async def nekobin_it(content, title="test function", author="CodeAiBot"):
 
 @Client.on_inline_query()
 async def inline_answer(client, inline_query):
-    user = await User.get_user(user_id=inline_query.from_user.id)
+    user = await User.get_user(user_id=inline_query.from_user.id, set_active=False)
     if user == "ask":
         user = await User.get_user(user_id=inline_query.from_user.id, user_name=inline_query.from_user.username,
                                    first_boot=True, set_active=False)
-    await inline_query.answer(
-        results=[
-            InlineQueryResultArticle(
-                title="Generate function,",
-                description='with docstrings and typehints. Simply continue "function, that will..."',
-                input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
-                id=python_uid,
-                thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                          "func_icn.jpg",
-                thumb_width=5,
-                thumb_height=5,
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [InlineKeyboardButton(
-                            plate("button_cancel", user.chosen_language),
-                            callback_data="inline_remove"
-                        )]
-                    ]
-                )
-            ),
+
+    if user.is_active is None or user.is_active is False:
+        await inline_query.answer(
+            results=[
+                InlineQueryResultArticle(
+                    title="Please,",
+                    description='activate Codefy, go to bot dialogue and run "/start".'
+                                '\nJoin the movement towards a better code!',
+                    input_message_content=InputTextMessageContent("[Welcome!](https://t.me/CodefyBot)"),
+                    thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
+                              "share_icn.jpg",
+                    thumb_width=5,
+                    thumb_height=5,
+
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [InlineKeyboardButton(
+                                "Activate",
+                                url="https://t.me/CodefyBot"
+                            )]
+                        ]
+                    )
+                ),
+
+            ],
+            cache_time=1
+        )
+
+    else:
+        await inline_query.answer(
+            results=[
+                InlineQueryResultArticle(
+                    title="Generate function,",
+                    description='with docstrings and typehints. Simply continue "function, that will..."',
+                    input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
+                    id=python_uid,
+                    thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
+                              "func_icn.jpg",
+                    thumb_width=5,
+                    thumb_height=5,
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [InlineKeyboardButton(
+                                plate("button_cancel", user.chosen_language),
+                                callback_data="inline_remove"
+                            )]
+                        ]
+                    )
+                ),
 
 
-            InlineQueryResultArticle(
-                title="Paste nekobin.com,",
-                description="save and share the link of your python code  in elegant way, len(code)<500.",
-                input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
-                id=neko_uid,
-                thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                          "nb_icn.jpg",
-                thumb_width=5,
-                thumb_height=5,
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [InlineKeyboardButton(
-                            plate("button_cancel", user.chosen_language),
-                            callback_data="inline_remove"
-                        )]
-                    ]
-                )
-            ),
+                InlineQueryResultArticle(
+                    title="Paste nekobin.com,",
+                    description="save and share the link of your python code  in elegant way, len(code)<500.",
+                    input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
+                    id=neko_uid,
+                    thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
+                              "nb_icn.jpg",
+                    thumb_width=5,
+                    thumb_height=5,
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [InlineKeyboardButton(
+                                plate("button_cancel", user.chosen_language),
+                                callback_data="inline_remove"
+                            )]
+                        ]
+                    )
+                ),
 
-            InlineQueryResultArticle(
-                title="Share Codefy,",
-                description="join the movement towards a better code!",
-                input_message_content=InputTextMessageContent("[Welcome to](https://t.me/CodefyChannel/28)"),
-                thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                          "share_icn.jpg",
-                thumb_width=5,
-                thumb_height=5,
+                InlineQueryResultArticle(
+                    title="Share Codefy,",
+                    description="help people to join the movement towards a better code!",
+                    input_message_content=InputTextMessageContent("[Welcome to](https://t.me/CodefyChannel/28)"),
+                    thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
+                              "share_icn.jpg",
+                    thumb_width=5,
+                    thumb_height=5,
 
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [InlineKeyboardButton(
-                            "Join",
-                            url="https://t.me/CodefyChannel/28"
-                        )]
-                    ]
-                )
-            ),
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [InlineKeyboardButton(
+                                "Join",
+                                url="https://t.me/CodefyChannel/28"
+                            )]
+                        ]
+                    )
+                ),
 
-        ],
-        cache_time=1
-    )
+            ],
+            cache_time=1
+        )
 
 
 @Client.on_chosen_inline_result()
