@@ -243,6 +243,7 @@ async def inline_result_func(client, inline_result):
 
     answer = await askopenai.ask_code(question=question, identificator=f"test~{user.user_id}", prompt_final=None)
     answer = answer["choices"][0]["text"]
+    answer = answer.replace("\n+", "\n")
 
     raw_result = str(answer).replace('`', '').replace('"""', '~~~', 1).\
         replace('"""', '\n       by @CodefyBot \n    """').replace('~~~', '"""')
