@@ -17,7 +17,6 @@ async def send_welcome_on_command(client, message):
             text="Confirm",
             callback_data="i_confirm"
         )
-
     ]])
     await Client.send_message(client, chat_id=message.chat.id, text=text, reply_markup=keyboard)
 

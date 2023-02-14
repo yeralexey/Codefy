@@ -115,6 +115,9 @@ class User:
             if user.join_date is None:
                 return "ask"
 
+        if user.is_active is None:
+            await user.get_attribute("is_active")
+
         if set_active is True:
             await user.set_attribute("is_active", True)
             await user.get_attribute("user_name")
