@@ -38,7 +38,7 @@ async def inline_answer(client, inline_query):
     await inline_query.answer(
         results=[
             InlineQueryResultArticle(
-                title="Generate function",
+                title="Generate function,",
                 description='with docstrings and typehints. Simply continue "function, that will..."',
                 input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
                 id=python_uid,
