@@ -4,9 +4,7 @@ from aimodels import askopenai
 from utils.nekobin import *
 from uuid import uuid4
 nekobin = NekoBin()
-neko_uid = str(uuid4()) # TODO Findgood way to generate one for all, but to generate inside inline_answer - to many calcs?...
-python_uid = str(uuid4())
-
+uuid = str(uuid4())
 
 # TODO Refactored, dry fails.
 
@@ -70,29 +68,9 @@ async def inline_answer(client, inline_query):
                     title="Generate function,",
                     description='with docstrings and typehints. Simply continue "function, that will..."',
                     input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
-                    id=python_uid,
+                    id=uuid,
                     thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
                               "func_icn.jpg",
-                    thumb_width=5,
-                    thumb_height=5,
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [InlineKeyboardButton(
-                                plate("button_cancel", user.chosen_language),
-                                callback_data="inline_remove"
-                            )]
-                        ]
-                    )
-                ),
-
-
-                InlineQueryResultArticle(
-                    title="Paste nekobin.com,",
-                    description="save and share the link of your python code  in elegant way, len(code)<500.",
-                    input_message_content=InputTextMessageContent(plate("inline_generating", user.chosen_language)),
-                    id=neko_uid,
-                    thumb_url="https://raw.githubusercontent.com/yeralexey/Codefy/master/maindata/icons/"
-                              "nb_icn.jpg",
                     thumb_width=5,
                     thumb_height=5,
                     reply_markup=InlineKeyboardMarkup(
@@ -130,48 +108,11 @@ async def inline_answer(client, inline_query):
 
 
 @Client.on_chosen_inline_result()
-async def inline_result_neko(client, inline_result):
-    if inline_result.result_id != neko_uid:
-        raise ContinuePropagation
-
-    user = await User.get_user(user_id=inline_result.from_user.id)
-
-    reply_markup = InlineKeyboardMarkup(
-        [
-            [InlineKeyboardButton(
-                plate("button_cancel", user.chosen_language),
-                callback_data="inline_remove"
-            )]
-        ]
-    )
-
-    # Checking query before processing
-
-    if len(str(inline_result.query)) < 25:
-        text = plate("inline2_insufficient_description")
-        try:
-            await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
-                                          disable_web_page_preview=True, reply_markup=reply_markup)
-        except Exception as err:
-            logger.exception(err)
-        return
-
-
-    result = await nekobin_it(content=inline_result.query, author=user.user_name)
-
-    try:
-        await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=result,
-                                      disable_web_page_preview=True, reply_markup=reply_markup)
-    except Exception as err:
-        logger.exception(err)
-
-
-@Client.on_chosen_inline_result()
 async def inline_result_func(client, inline_result):
 
     # Checking type of inline_result
 
-    if inline_result.result_id != python_uid:
+    if inline_result.result_id != uuid:
         raise ContinuePropagation
 
     # Defining user
@@ -234,44 +175,41 @@ async def inline_result_func(client, inline_result):
 
     # Processing a query text, asking for generation and creating text of function
 
-    if prog_lang == "Python":
+    question = f"###Task 1. Write function using {prog_lang} programming language. It should {query}." \
+               f"\n#Use readable laconic code according to {prog_lang} highest standards." \
+               f"\n#Add documentation with detailed function explain." \
+               f"\n#Provide typehints, if {prog_lang} supports." \
+               f"\n#Add one how-to-call example." \
+               f"\n#My code on {prog_lang}:"
 
-        question = f"###Write a function on {prog_lang} programming language, with typehints and high quality " \
-               f"docstrings, explaining what the function does and how to use it, that will {query}:"
+    loop = asyncio.get_running_loop()
+    answer = await loop.run_in_executor(None, askopenai.ask_code, question)
+
+    answer = answer.replace("\n+", "\n").replace("`", "")
+
+    if '"""' in answer:
+        in_code_result = str(answer).replace('`', '').replace('"""', '~~~', 1). \
+            replace('"""', '\n    by @CodefyBot, t.me \n    """').replace('~~~', '"""')
+        in_code_result = f"```\n{in_code_result}```"
     else:
-        question = f"###Write a function on {prog_lang} programming language, that will {query}:"
 
-    answer = await askopenai.ask_code(question=question, identificator=f"test~{user.user_id}", prompt_final=None)
-    answer = answer["choices"][0]["text"]
-    answer = answer.replace("\n+", "\n")
-
-    raw_result = str(answer).replace('`', '').replace('"""', '~~~', 1).\
-        replace('"""', '\n       by @CodefyBot \n    """').replace('~~~', '"""')
-
-    in_code_result = f"```{raw_result}```"
-
-    # Pasting text of function to nekobin.com, trying to receive link
-
-    try:
-        neko_link = await nekobin_it(content=raw_result, author=user.user_name)
-        if prog_lang == "Python":
-            if "htt" in str(neko_link):
-                neko_link = f"{neko_link}.py"
-    except Exception as err:
-        logger.exception(err)
-        neko_link = "necobin.com fail"
+        in_code_result = f"```\n{answer}\n# by @CodefyBot, t.me```"
 
     # Creating Telegram post
 
     text = f"**request**: \"`{inline_result.query}`\"\n" \
            f"**author**: {author}\n" \
            f"**language**: {prog_lang}" \
-           f"{in_code_result}<i>{neko_link}</i>"
+           f"\n{in_code_result}\n\n<i>https://www.nekobin.com</i>"
+
+    if len(text) > 4000:
+        text = f"{text[:2000]}...```\nhttps://www.nekobin.com</i>"
 
     try:
         await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
                                       disable_web_page_preview=True, reply_markup=reply_markup)
     except Exception as err:
+        print(err)
         logger.exception(err)
 
 
