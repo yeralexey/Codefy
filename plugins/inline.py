@@ -207,7 +207,7 @@ async def inline_result_func(client, inline_result):
 
     try:
         await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
-                                      disable_web_page_preview=True, reply_markup=reply_markup)
+                                      disable_web_page_preview=True, reply_markup=None)
     except Exception as err:
         print(err)
         logger.exception(err)
