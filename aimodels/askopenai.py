@@ -20,6 +20,7 @@ def ask_code(question):
             stop=["#Task"]
         )
 
+        ailogger.info(question)
         result_final = result["choices"][0]["text"]
         while result_final[-1] == "#" or result_final[-1] == " ":
             result_final = result_final[:-1]
