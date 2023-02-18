@@ -6,7 +6,7 @@ import asyncio
 from asyncio import exceptions
 import datetime
 
-from utils import gw, cr, db, vd, logger, plate
+from utils import gw, cr, db, vd, logger, plate, keyboard
 from entities import User, Interview
 
 from pyrogram import Client, filters
