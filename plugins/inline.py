@@ -193,7 +193,7 @@ async def inline_result_func(client, inline_result):
 
     # Creating await message
 
-    text = f"Generating function, that will `{query}`, on {prog_lang}."
+    text = f"Generating function, that will **{query}**, \n\nusing {prog_lang}."
 
     try:
         await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
