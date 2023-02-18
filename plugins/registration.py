@@ -35,8 +35,9 @@ async def proceed_interview_text(client, message):
     user = await User.get_user(message.chat.id)
 
     read_step = await user.get_attribute("current_step")
-    if not read_step:
+    if not read_step or "adminjob" in read_step:
         message.continue_propagation()
+        print("interview continued propagation")
         return
 
     step_name, call_message_chat, call_message_id = read_step[0], read_step[1], read_step[2]
