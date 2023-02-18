@@ -6,7 +6,7 @@ from utils.logger import init_logger
 ailogger = init_logger(name="openai", console_level="ERROR")
 
 
-def ask_code(question):
+def ask_code(question, stopper):
     model = "code-davinci-002"
     try:
         result = openai.Completion.create(
@@ -17,10 +17,10 @@ def ask_code(question):
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0,
-            stop=["#Task"]
+            stop=stopper.split(" ")
         )
 
-        ailogger.info(f"\n{question}")
+        ailogger.info(f"\n\n{question}")
         result_final = result["choices"][0]["text"]
         while result_final[-1] == "#" or result_final[-1] == " ":
             result_final = result_final[:-1]

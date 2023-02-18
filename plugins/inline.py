@@ -27,6 +27,26 @@ async def nekobin_it(content, title="test function", author="CodeAiBot"):
         return "Nekobin.com refuse, flood wait."
 
 
+async def task_index(get_next=False, value=None):
+    if value is not None:
+        if isinstance(value, int):
+            return await db.write_raw("task_index", value)
+    result = await db.read_raw("task_index") or 1
+    if get_next:
+        result += 1
+        await db.write_raw("task_index", result)
+    return result
+
+
+async def fix_proper_comment(text, language):
+    langs_slash_comment = ["C++", "C#", "Go", "Golang", "C", "Java", "JavaScript", "PHP", "Swift", "Kotlin", "Rust"]
+    if language in langs_slash_comment:
+        text = text.replace("#", "//")
+    if language == "C#":
+        text = text.replace("C//", "C#")
+    return text
+
+
 @Client.on_inline_query()
 async def inline_answer(client, inline_query):
     user = await User.get_user(user_id=inline_query.from_user.id, set_active=False)
@@ -156,6 +176,14 @@ async def inline_result_func(client, inline_result):
         arg_index = words_list.index("-l")
         lang_index = arg_index + 1
         prog_lang = words_list[lang_index]
+        if prog_lang.lower() == "php":
+            prog_lang = "PHP"
+        elif prog_lang.lower() == "javascript":
+            prog_lang = "JavaScript"
+        elif prog_lang.lower() == "coffeescript":
+            prog_lang = "CoffeeScript"
+        else:
+            prog_lang = prog_lang.title()
         del words_list[arg_index]
         del words_list[arg_index]
         query = " ".join(words_list)
@@ -165,7 +193,7 @@ async def inline_result_func(client, inline_result):
 
     # Creating await message
 
-    text = f"Generating function, that will `{query}`."
+    text = f"Generating function, that will `{query}`, on {prog_lang}."
 
     try:
         await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
@@ -175,15 +203,18 @@ async def inline_result_func(client, inline_result):
 
     # Processing a query text, asking for generation and creating text of function
 
-    question = f"###Task 1. Write function using {prog_lang} programming language. It should {query}." \
+    stopper = "#Task ##"
+    index = await task_index(get_next=True)
+    question = f"###Task {index}. Write just one function using {prog_lang} programming language. It should {query}." \
                f"\n#Use readable laconic code according to {prog_lang} highest standards." \
                f"\n#Add documentation with detailed function explain." \
                f"\n#Provide typehints, if {prog_lang} supports." \
                f"\n#Add one how-to-call example." \
-               f"\n#My code on {prog_lang}:"
-
+               f"\n#My function:"
+    question = await fix_proper_comment(question, prog_lang)
+    stopper = await fix_proper_comment(stopper, prog_lang)
     loop = asyncio.get_running_loop()
-    answer = await loop.run_in_executor(None, askopenai.ask_code, question)
+    answer = await loop.run_in_executor(None, askopenai.ask_code, question, stopper)
 
     answer = answer.replace("\n+", "\n").replace("`", "")
 
@@ -193,17 +224,18 @@ async def inline_result_func(client, inline_result):
         in_code_result = f"```\n{in_code_result}```"
     else:
 
-        in_code_result = f"```\n{answer}\n# by @CodefyBot, t.me```"
+        in_code_result = f"```\n\n# by @CodefyBot, t.me\n{answer}\n```"
+        in_code_result = await fix_proper_comment(in_code_result, prog_lang)
 
     # Creating Telegram post
 
     text = f"**request**: \"`{inline_result.query}`\"\n" \
            f"**author**: {author}\n" \
            f"**language**: {prog_lang}" \
-           f"\n{in_code_result}\n\n<i>https://www.nekobin.com</i>"
+           f"\n{in_code_result}\n<i>Use [neko:bin](https://www.nekobin.com)</i>"
 
     if len(text) > 4000:
-        text = f"{text[:2000]}...```\nhttps://www.nekobin.com</i>"
+        text = f"{text[:2000]}...```\n<i>Use [neko:bin](https://www.nekobin.com)</i>"
 
     try:
         await Client.edit_inline_text(client, inline_message_id=inline_result.inline_message_id, text=text,
