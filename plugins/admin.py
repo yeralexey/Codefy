@@ -1,9 +1,7 @@
 from main import *
 
-# TODO Since pyromod was removed from project - need to change buttons implementation + answers to get
 
-
-@Client.on_message(filters.private & filters.user(config.admins) & filters.command(
+@Client.on_message(filters.user(config.admins) & filters.private & filters.command(
     ['restart', 'reboot', 'kill', 'setindex', 'admin', 'commands']))
 async def from_admins(client, message):
     user = await User.get_user(message.chat.id)
@@ -18,24 +16,9 @@ async def from_admins(client, message):
         cr.kill()
     if message.command[0] == 'setindex':
         await Client.send_message(client, message.chat.id, plate("admin_on_setindex", user.chosen_language))
-
-        try:
-            answer = await client.listen(message.chat.id, timeout=15)
-        except listen.ListenerStopped:
-            logger.debug("listener cancelled")
-            return
-        except listen.ListenerTimeout:
-            logger.debug("listener timeout")
-            return
-        except Exception as err:
-            logger.exception(err)
-            return
-
-        if not answer.text.isdigit():
-            await message.reply(plate("admin_on_setindex_invalid_input", user.chosen_language))
-            return
-        await User.main_index(value=answer.text)
-        await message.reply(plate("admin_on_setindex_changed", user.chosen_language))
+        await user.set_attribute("current_step", "adminjob_set_index")
+        await asyncio.sleep(15)
+        await user.set_attribute("current_step", None)
     if message.command[0] == 'admin':
         await admin_menu(client, message)
     if message.command[0] == 'commands':
@@ -49,7 +32,7 @@ async def from_admins(client, message):
 
 async def admin_menu(_, message):
     user = await User.get_user(message.chat.id)
-    keyboard = ikb([
+    markup = keyboard([
         [(plate("admin_menu_url", user.chosen_language),
           f'https://docs.google.com/spreadsheets/d/{config.main_sheet}/', 'url')],
         [(plate("admin_menu_log", user.chosen_language), 'admin_getlog')],
@@ -59,10 +42,10 @@ async def admin_menu(_, message):
         [(plate("admin_menu_send_all", user.chosen_language), 'admin_messageall')],
         [(plate("admin_menu_send_list", user.chosen_language), 'admin_messagelist')]
     ])
-    await message.reply(plate("admin_menu", user.chosen_language), reply_markup=keyboard)
+    await message.reply(plate("admin_menu", user.chosen_language), reply_markup=markup)
 
 
-@Client.on_callback_query(filters.regex(pattern='admin'))
+@Client.on_callback_query(filters.user(config.admins) & filters.regex(pattern='admin'))
 async def admin_acts(client, call):
     user = await User.get_user(call.message.chat.id)
     chat_id = call.message.chat.id
@@ -91,70 +74,25 @@ async def admin_acts(client, call):
 
     if call.data == 'admin_restoredb':
         await Client.send_message(client, chat_id, plate("admin_restore_db_response", user.chosen_language))
+        await user.set_attribute("current_step", "adminjob_restore_db_await_file")
+        await asyncio.sleep(30)
+        await user.set_attribute("current_step", None)
 
-        try:
-            answer = await call.message.chat.listen(timeout=30)
-        except listen.ListenerStopped:
-            logger.debug("listener cancelled")
-            return
-        except listen.ListenerTimeout:
-            logger.debug("listener timeout")
-            return
-        except Exception as err:
-            logger.exception(err)
-            return
-
-        if answer.document.file_name != str(config.db_file).split('/')[-1]:
-            await Client.send_message(client, chat_id, plate("admin_restore_db_fail", user.chosen_language))
-            return
-        await answer.download(config.db_file)
-        await Client.send_message(client, chat_id, plate("admin_restore_db_confirm", user.chosen_language))
 
     if call.data == 'admin_messageall':
         await Client.send_message(client, chat_id, plate("admin_send_all_confirmation_request", user.chosen_language))
+        await user.set_attribute("current_step", "adminjob_send_to_all")
+        await asyncio.sleep(15)
+        await user.set_attribute("current_step", None)
+        return
 
-        try:
-            answer = await call.message.chat.listen(timeout=30)
-        except listen.ListenerStopped:
-            logger.debug("listener cancelled")
-            return
-        except listen.ListenerTimeout:
-            logger.debug("listener timeout")
-            return
-        except Exception as err:
-            logger.exception(err)
-            return
-
-        if answer.text == "active":
-            mail_list = await User.get_users(attribute="is_active", checkvalue=True, value=True)
-            await start_mailing(client, mail_list, "to_all", message=call.message)
-        elif answer.text == "include blocked":
-            mail_list = await User.get_users()
-            await start_mailing(client, mail_list, "to_all", message=call.message)
-        else:
-            await Client.send_message(client, chat_id, plate("admin_send_all_abort", user.chosen_language))
 
     if call.data == 'admin_messagelist':
         await Client.send_message(client, chat_id, plate("admin_send_list_file_request", user.chosen_language))
-
-        try:
-            answer = await call.message.chat.listen(timeout=60)
-        except listen.ListenerStopped:
-            logger.debug("listener cancelled")
-            return
-        except listen.ListenerTimeout:
-            logger.debug("listener timeout")
-            return
-        except Exception as err:
-            logger.exception(err)
-            return
-
-        if str(answer.document.file_name).split('.')[1] != "txt":
-            await Client.send_message(client, chat_id, plate("admin_send_list_abort", user.chosen_language))
-        else:
-            file = await answer.download(in_memory=True)
-            mail_list = bytes(file.getbuffer()).decode("utf-8").split("\n")
-            await start_mailing(client, mail_list, "by_list", message=call.message)
+        await user.set_attribute("current_step", "adminjob_send_by_list")
+        await asyncio.sleep(60)
+        await user.set_attribute("current_step", None)
+        return
 
 
 async def start_mailing(client, mail_list, mail_type, message):
@@ -162,42 +100,50 @@ async def start_mailing(client, mail_list, mail_type, message):
     chat_id = message.chat.id
     user = await User.get_user(chat_id)
     await Client.send_message(client, chat_id, plate("admin_send_await_repost", user.chosen_language))
+    await user.set_attribute("current_step", "start_mailing")
+    await user.set_attribute("maildata", (mail_type, mail_list))
+    await asyncio.sleep(60)
+    await user.set_attribute("current_step", None)
+    await user.set_attribute("maildata", None)
 
-    try:
-        mail = await message.chat.listen(timeout=60)
-    except listen.ListenerStopped:
-        logger.debug("listener cancelled")
-        return
-    except listen.ListenerTimeout:
-        logger.debug("listener timeout")
-        return
-    except Exception as err:
-        logger.exception(err)
-        return
 
-    await Client.send_message(client, chat_id, plate("admin_send_started", user.chosen_language))
+@Client.on_message(filters.user(config.admins) & filters.private)
+async def continue_mailing_(client, message):
+    user = await User.get_user(message.chat.id)
+    read_step = await user.get_attribute("current_step")
+    if not read_step or read_step != "start_mailing":
+        message.continue_propagation()
+        return
+    mailingdata  = await user.get_user("maildata")
+    mail_list = mailingdata[0]
+    mail_type = mailingdata[1]
+    await user.set_attribute("current_step", None)
+    await user.set_attribute("maildata", None)
+
+    await Client.send_message(client, message.chat.id, plate("admin_send_started", user.chosen_language))
     try:
         log_file_name = f"{config.mail_logs}{mail_type}{str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}.csv"
         with open(log_file_name, "w", encoding="utf-8") as file:
-            if mail.caption:
-                description = mail.caption
-            elif mail.text:
-                description = mail.text
+            if message.caption:
+                description = message.caption
+            elif message.text:
+                description = message.text
             else:
                 description = "no description"
             file.write(
-                f"date: {str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}. \nby: {chat_id}, "
-                f"\n\nmessage: {mail.id}\n\n"
+                f"date: {str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}. \nby: {message.chat.id}, "
+                f"\n\nmessage: {message.id}\n\n"
                 f"description: {description[:50]}...\n\n________________\n\n")
         for mail_id in mail_list:
             when = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             if len(mail_id) < 3:
                 continue
             try:
-                if mail.media_group_id:
-                    await Client.copy_media_group(client, int(mail_id), "self", mail.id, captions=mail.caption.html)
+                if message.media_group_id:
+                    await Client.copy_media_group(client, int(mail_id), "self", message.id,
+                                                  captions=message.caption.html)
                 else:
-                    await mail.copy(int(mail_id))
+                    await message.copy(int(mail_id))
                 res = f"{mail_id};{when.split('.')[0]};ok"
             except Exception as err:
                 logger.exception(err)
@@ -206,9 +152,49 @@ async def start_mailing(client, mail_list, mail_type, message):
             with open(log_file_name, "a", encoding="utf-8") as file:
                 file.write(f"\n{res}")
             await asyncio.sleep(1)
-        await Client.send_message(client, chat_id, plate("admin_send_success", user.chosen_language))
-        await Client.send_document(client, chat_id, log_file_name)
+        await Client.send_message(client, message.chat.id, plate("admin_send_success", user.chosen_language))
+        await Client.send_document(client, message.chat.id, log_file_name)
     except Exception as err:
         logger.exception(err)
-        await Client.send_message(client, chat_id, plate("admin_send_fail", user.chosen_language))
+        await Client.send_message(client, message.chat.id, plate("admin_send_fail", user.chosen_language))
         await Client.send_message(client, config.admins[0], plate("admin_send_admin_fail", user.chosen_language))
+
+
+@Client.on_message(filters.private)
+async def on_admins_message(client, message):
+    user = await User.get_user(message.chat.id)
+    read_step = await user.get_attribute("current_step")
+    if not read_step or "adminjob" not in read_step:
+        await user.set_attribute("current_step", None)
+        message.continue_propagation()
+        return
+    if read_step == "adminjob_restore_db_await_file":
+        if message.document.file_name != str(config.db_file).split('/')[-1]:
+            await Client.send_message(client, message.chat.id, plate("admin_restore_db_fail", user.chosen_language))
+            return
+        await message.download(config.db_file)
+        await Client.send_message(client, message.chat.id, plate("admin_restore_db_confirm", user.chosen_language))
+    if read_step == "adminjob_send_to_all":
+        if message.text == "active":
+            mail_list = await User.get_users(attribute="is_active", checkvalue=True, value=True)
+            await start_mailing(client, mail_list, "to_all", message=message)
+        elif message.text == "include blocked":
+            mail_list = await User.get_users()
+            await start_mailing(client, mail_list, "to_all", message=message)
+        else:
+            await Client.send_message(client, message.chat.id, plate("admin_send_all_abort", user.chosen_language))
+
+    if read_step == "adminjob_send_by_list":
+        if str(message.document.file_name).split('.')[1] != "txt":
+            await Client.send_message(client, message.chat.id, plate("admin_send_list_abort", user.chosen_language))
+        else:
+            file = await message.download(in_memory=True)
+            mail_list = bytes(file.getbuffer()).decode("utf-8").split("\n")
+            await start_mailing(client, mail_list, "by_list", message=message)
+
+    if read_step == 'adminjob_set_index':
+        if not message.text.isdigit():
+            await message.reply(plate("admin_on_setindex_invalid_input", user.chosen_language))
+            return
+        await User.main_index(value=int(message.text))
+        await message.reply(plate("admin_on_setindex_changed", user.chosen_language))
