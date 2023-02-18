@@ -8,6 +8,7 @@ ailogger = init_logger(name="openai", console_level="ERROR")
 
 def ask_code(question, stopper):
     model = "code-davinci-002"
+    ailogger.info(f"\n\n{question}")
     try:
         result = openai.Completion.create(
             model=model,
@@ -19,14 +20,11 @@ def ask_code(question, stopper):
             presence_penalty=0,
             stop=stopper.split(" ")
         )
-
-        ailogger.info(f"\n\n{question}")
         result_final = result["choices"][0]["text"]
         while result_final[-1] == "#" or result_final[-1] == " ":
             result_final = result_final[:-1]
         if len(result_final) < 20:
             result_final = "!!! inappropriate generation:"+"\n\n"+str(result)
-
 
     except openai.error.RateLimitError:
         result_final = "Sorry, we are out of the limit for now, try later..."
